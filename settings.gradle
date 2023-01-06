@@ -16,3 +16,4 @@ rootProject.name = "CoinsViewer"
 include ':app'
 include ':domain'
 include ':data'
+//include ':common'
