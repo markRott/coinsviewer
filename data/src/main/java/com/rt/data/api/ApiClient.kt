@@ -18,7 +18,11 @@ class ApiClient {
         //
         install(HttpTimeout)
         install(DefaultRequest) { url(BASE_URL) }
-        install(ContentNegotiation) { json() }
+        install(ContentNegotiation) {
+            json(kotlinx.serialization.json.Json {
+                ignoreUnknownKeys = true
+            })
+        }
         install(Logging) {
             level = LogLevel.BODY
             logger = ApiLogger.getApiLogger()

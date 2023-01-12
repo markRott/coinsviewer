@@ -6,7 +6,8 @@ enum class LogTag(tag: String = "") {
     DEF_LOG("DEF_LOG"),
     UI_LOG("UI_LOG"),
     DATA_LOG("DATA_LOG"),
-    DOMAIN_LOG("DOMAIN_LOG")
+    DOMAIN_LOG("DOMAIN_LOG"),
+    RAW_RESPONSE_LOG("RAW_RESPONSE_LOG")
 }
 
 interface ILog {
@@ -49,4 +50,9 @@ object DomainLog : ILog {
 object AppLog : ILog {
     override val tag: String
         get() = LogTag.DEF_LOG.name
+}
+
+object RawResponseLog : ILog {
+    override val tag: String
+        get() = LogTag.RAW_RESPONSE_LOG.name
 }
