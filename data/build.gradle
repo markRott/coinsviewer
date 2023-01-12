@@ -35,7 +35,9 @@ android {
 dependencies {
 
     implementation project(path: ':domain')
-//    implementation project(path: ':common')
+    implementation project(path: ':common')
+
+    implementation "javax.inject:javax.inject:1"
 
     // Ktor
     implementation "io.ktor:ktor-client-cio:$ktor"
