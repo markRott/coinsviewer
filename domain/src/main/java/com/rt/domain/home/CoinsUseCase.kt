@@ -1,15 +1,15 @@
 package com.rt.domain.home
 
-import com.rt.common.DomainLog
+import com.rt.domain.models.Coins
 import com.rt.domain.repositories.CoinsContract
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CoinsUseCase @Inject constructor(
     private val coinsContract: CoinsContract
 ) {
 
-    suspend fun fetchCoins() {
-        DomainLog.i("Fetch coins")
-        coinsContract.fetchCoins()
+    fun fetchCoins(): Flow<Result<Coins>> {
+        return coinsContract.fetchCoins()
     }
 }

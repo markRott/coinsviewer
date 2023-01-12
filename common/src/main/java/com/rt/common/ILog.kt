@@ -20,7 +20,13 @@ interface ILog {
     }
 
     fun i(msg: String = "") {
-        Logger.withTag(tag).i(msg)
+        val finalMsg = buildString {
+            append(msg)
+            append(System.lineSeparator())
+            append("==============================================================================")
+            append(System.lineSeparator())
+        }
+        Logger.withTag(tag).i(finalMsg)
     }
 
     fun e(msg: String = "", throwable: Throwable? = null) {
