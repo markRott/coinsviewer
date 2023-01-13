@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rt.coinsviewer.Status
-import com.rt.common.UiLog
 import com.rt.domain.models.Coin
 
 @Composable
@@ -39,9 +38,7 @@ fun CoinsView(homeVM: HomeVM) {
     when (uiState.value.status) {
         Status.LOADING -> ProgressBar(true)
         Status.SUCCESS -> {
-            val result: List<Coin> = uiState.value.data?.coins ?: emptyList()
-            UiLog.i("Coins: $result")
-            if (result.isNotEmpty()) RenderCoins(result)
+            RenderCoins(uiState.value.data?.coins ?: emptyList())
             ProgressBar(false)
         }
         Status.ERROR -> ProgressBar(false)
@@ -51,12 +48,14 @@ fun CoinsView(homeVM: HomeVM) {
 
 @Composable
 fun RenderCoins(coins: List<Coin>) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        contentPadding = PaddingValues(16.dp),
-    ) {
-        items(coins) { currCoin ->
-            key(currCoin.id) { CoinItem(coin = currCoin) }
+    if (coins.isNotEmpty()) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            contentPadding = PaddingValues(16.dp),
+        ) {
+            items(coins) { currCoin ->
+                key(currCoin.id) { CoinItem(coin = currCoin) }
+            }
         }
     }
 }
@@ -125,8 +124,6 @@ fun ProgressBar(visibleState: Boolean) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
-        ) {
-            CircularProgressIndicator()
-        }
+        ) { CircularProgressIndicator() }
     }
 }
