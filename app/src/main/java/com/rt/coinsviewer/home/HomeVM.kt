@@ -10,7 +10,9 @@ import com.rt.common.UiLog
 import com.rt.domain.home.CoinsUseCase
 import com.rt.domain.models.Coins
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,10 +33,20 @@ class HomeVM @Inject constructor(
                 result.onSuccess {
                     UiLog.i("Success.")
                     _coinsFlow.value = success(it)
+                    connectToCoinSocket()
                 }
                 result.onFailure { _coinsFlow.value = error(it.message) }
             }
             .catch { UiLog.e("Fetch coins exception.", it) }
             .launchIn(viewModelScope)
+    }
+
+    private fun connectToCoinSocket() {
+        if (_coinsFlow.value.data?.coins?.isNotEmpty() == true) {
+            viewModelScope.launch {
+                delay(2000)
+                coinsUseCase.connectToCoinSocket()
+            }
+        }
     }
 }

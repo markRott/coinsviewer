@@ -108,19 +108,11 @@ fun CoinPrice(price: String) {
 
 @Composable
 fun ProgressBar(visibleState: Boolean) {
-//    var visible by remember { mutableStateOf(true) }
     AnimatedVisibility(
         visible = visibleState,
-        enter = fadeIn(
-            // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
-            initialAlpha = 0.4f
-        ),
-        exit = fadeOut(
-            // Overwrites the default animation with tween
-            animationSpec = tween(durationMillis = 250)
-        )
+        enter = fadeIn(initialAlpha = 0.4f),
+        exit = fadeOut(animationSpec = tween(durationMillis = 250))
     ) {
-        // Content that needs to appear/disappear goes here:
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()

@@ -1,4 +1,4 @@
-package com.rt.data
+package com.rt.data.repositories
 
 import com.rt.common.DataLog
 import com.rt.data.api.ApiClient
