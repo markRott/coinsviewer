@@ -1,6 +1,8 @@
 package com.rt.coinsviewer
 
-enum class Status { NONE, LOADING, SUCCESS, ERROR }
+enum class Status { NONE, LOADING, SUCCESS, ERROR
+//, COMPLETE
+}
 
 data class UiResult<out T>(
     val status: Status,
@@ -25,5 +27,9 @@ data class UiResult<out T>(
         fun <T> error(message: String? = "", data: T? = null): UiResult<T> {
             return UiResult(Status.ERROR, data, message)
         }
+
+//        fun <T> complete(): UiResult<T> {
+//            return UiResult(Status.COMPLETE, null, null)
+//        }
     }
 }

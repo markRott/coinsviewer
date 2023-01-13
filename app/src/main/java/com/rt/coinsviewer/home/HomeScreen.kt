@@ -1,15 +1,18 @@
 package com.rt.coinsviewer.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.key
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,8 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.rt.coinsviewer.Status
 import com.rt.common.UiLog
 import com.rt.domain.models.Coin
 
@@ -32,10 +35,18 @@ fun HomeScreen(homeVM: HomeVM = hiltViewModel()) {
 @Composable
 fun CoinsView(homeVM: HomeVM) {
     val uiState = homeVM.coinsFlow.collectAsState()
-    val result: List<Coin> = uiState.value.data?.coins ?: emptyList()
-    UiLog.i("Coins: $result")
 
-    if (result.isNotEmpty()) RenderCoins(result)
+    when (uiState.value.status) {
+        Status.LOADING -> ProgressBar(true)
+        Status.SUCCESS -> {
+            val result: List<Coin> = uiState.value.data?.coins ?: emptyList()
+            UiLog.i("Coins: $result")
+            if (result.isNotEmpty()) RenderCoins(result)
+            ProgressBar(false)
+        }
+        Status.ERROR -> ProgressBar(false)
+        else -> Unit
+    }
 }
 
 @Composable
@@ -94,4 +105,28 @@ fun CoinPrice(price: String) {
         text = price,
         fontSize = 18.sp
     )
+}
+
+@Composable
+fun ProgressBar(visibleState: Boolean) {
+//    var visible by remember { mutableStateOf(true) }
+    AnimatedVisibility(
+        visible = visibleState,
+        enter = fadeIn(
+            // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
+            initialAlpha = 0.4f
+        ),
+        exit = fadeOut(
+            // Overwrites the default animation with tween
+            animationSpec = tween(durationMillis = 250)
+        )
+    ) {
+        // Content that needs to appear/disappear goes here:
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator()
+        }
+    }
 }

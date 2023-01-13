@@ -15,8 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.rt.coinsviewer.R
-import com.rt.coinsviewer.navigation.RouteManager
-import com.rt.coinsviewer.navigation.Routes
+import com.rt.coinsviewer.navigation.NavManager
+import com.rt.coinsviewer.navigation.Screens
 import kotlinx.coroutines.delay
 
 @Composable
@@ -41,11 +41,11 @@ fun SplashScreen(navHostController: NavHostController? = null) {
                 )
 
                 delay(500)
-                RouteManager.navigate(
-                    Routes.Home,
+                NavManager.navigate(
+                    Screens.Home,
                     navHostController,
                     true,
-                    Routes.Splash
+                    Screens.Splash
                 )
             })
 

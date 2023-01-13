@@ -6,13 +6,21 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.rt.coinsviewer.navigation.StartScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.rt.coinsviewer.home.HomeScreen
+import com.rt.coinsviewer.navigation.Screens
+import com.rt.coinsviewer.splash.SplashScreen
 import com.rt.coinsviewer.ui.theme.CoinsViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,6 +35,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+        }
+    }
+
+    @Composable
+    fun StartScreen() {
+        val navController: NavHostController = rememberNavController()
+        NavHost(
+            navController = navController,
+            startDestination = Screens.Splash.path
+        ) {
+            composable(Screens.Splash.path) { SplashScreen(navController) }
+            composable(Screens.Home.path) { HomeScreen() }
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rt.coinsviewer.UiResult
 import com.rt.coinsviewer.UiResult.Companion.error
+import com.rt.coinsviewer.UiResult.Companion.loading
 import com.rt.coinsviewer.UiResult.Companion.success
 import com.rt.common.UiLog
 import com.rt.domain.home.CoinsUseCase
@@ -22,10 +23,15 @@ class HomeVM @Inject constructor(
 
     fun fetchCoins() {
         coinsUseCase.fetchCoins()
-            .onStart { UiLog.i("Start request: Fetch coins.") }
-            .onCompletion { UiLog.i("Stop request: Fetch coins.") }
+            .onStart {
+                UiLog.i("Start request: Fetch coins.")
+                _coinsFlow.value = loading()
+            }
             .onEach { result ->
-                result.onSuccess { _coinsFlow.value = success(it) }
+                result.onSuccess {
+                    UiLog.i("Success.")
+                    _coinsFlow.value = success(it)
+                }
                 result.onFailure { _coinsFlow.value = error(it.message) }
             }
             .catch { UiLog.e("Fetch coins exception.", it) }
