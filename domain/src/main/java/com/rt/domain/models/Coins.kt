@@ -8,8 +8,15 @@ data class Coin(
     val name: String = "",
     val symbol: String = "",
     val icon: String = "",
+    val priceFluctuation: PriceFluctuation = PriceFluctuation.UNKNOWN
 ) {
     override fun toString(): String {
         return "Coin(price='$price', name='$name')"
     }
+}
+
+enum class PriceFluctuation {
+    UNKNOWN,
+    UP,
+    DOWN
 }

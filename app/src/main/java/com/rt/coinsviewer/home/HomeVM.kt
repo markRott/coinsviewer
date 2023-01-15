@@ -10,6 +10,7 @@ import com.rt.coinsviewer.UiResult.Companion.success
 import com.rt.common.UiLog
 import com.rt.domain.home.CoinsUseCase
 import com.rt.domain.models.Coin
+import com.rt.domain.models.PriceFluctuation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -35,7 +36,7 @@ class HomeVM @Inject constructor(
             .onEach { result ->
                 result.onSuccess {
                     _restCoinsFlow.value = success(it.coins)
-                    _updateCoinsFlow.value = it.coins
+                    _updateCoinsFlow.value = it.coins.take(5)
                     connectToCoinSocket()
                 }
                 result.onFailure { _restCoinsFlow.value = error(it.message) }
@@ -47,7 +48,6 @@ class HomeVM @Inject constructor(
     private fun connectToCoinSocket() {
         if (getAllCoins().isNotEmpty()) {
             viewModelScope.launch {
-                delay(5000)
                 coinsUseCase.connectToCoinSocket()
             }
             subscribeToSocketEvents()
@@ -62,15 +62,45 @@ class HomeVM @Inject constructor(
             .onEach { coinMap: Map<String, String> ->
                 val currItems = getAllCoins().toMutableList()
                 currItems.mapIndexed { index, coin ->
+
                     val coinId = coin.id
                     if (coinMap.containsKey(coinId)) {
+
+                        val oldPrice = coin.price
                         val newPrice = coinMap[coinId] ?: ""
-                        val updatedCoin = coin.copy(price = newPrice)
+                        val newFluctuation = calcPriceFluctuation(oldPrice, newPrice)
+
+                        val updatedCoin = coin.copy(
+                            price = newPrice,
+                            priceFluctuation = newFluctuation
+                        )
                         currItems[index] = updatedCoin
+
                         _updateCoinsFlow.value = currItems.toList()
                     }
                 }
             }.launchIn(viewModelScope)
+    }
+
+    private fun calcPriceFluctuation(
+        oldPriceStr: String,
+        newPriceStr: String
+    ): PriceFluctuation {
+
+        val oldPrice = oldPriceStr.toDoubleOrNull()
+        val newPrice = newPriceStr.toDoubleOrNull()
+
+        return if(oldPrice != null && newPrice != null) {
+            val newFluctuation = when {
+                newPrice > oldPrice -> PriceFluctuation.UP
+                else -> PriceFluctuation.DOWN
+            }
+            newFluctuation
+
+        } else {
+            UiLog.i("Bad convert")
+            PriceFluctuation.UNKNOWN
+        }
     }
 
     private fun getAllCoins(): List<Coin> = _updateCoinsFlow.value
