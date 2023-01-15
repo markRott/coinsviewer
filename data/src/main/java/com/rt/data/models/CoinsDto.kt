@@ -39,5 +39,5 @@ fun CoinsDto.toCoins(): Coins {
             )
         }
 
-    return Coins(items.toImmutableList())
+    return Coins(items)
 }

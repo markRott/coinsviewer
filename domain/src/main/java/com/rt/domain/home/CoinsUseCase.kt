@@ -18,4 +18,6 @@ class CoinsUseCase @Inject constructor(
     suspend fun connectToCoinSocket() {
         coinSocketContract.connect()
     }
+
+    fun onSocketStateFlow() = coinSocketContract.onSocketStateFlow()
 }

@@ -1,5 +1,6 @@
 package com.rt.data.repositories
 
+import com.google.gson.Gson
 import com.rt.common.DataLog
 import com.rt.data.thread.ThreadContract
 import com.rt.domain.repositories.CoinSocketContract
@@ -18,19 +19,17 @@ class CoinSocketImpl @Inject constructor(
     private val thread: ThreadContract
 ) : CoinSocketContract {
 
-//   private val socketStateFlow = MutableStateFlow()
+    private val gson = Gson()
+    private val socketStateFlow = MutableStateFlow<Map<String, String>>(emptyMap())
 
     override suspend fun connect() {
         DataLog.i("Connect to coin socket")
         initSocketClient()
     }
 
-//    override fun socketFlow(): Flow<String> {
-//        return socketFlow
-//    }
+    override fun onSocketStateFlow(): StateFlow<Map<String, String>> = socketStateFlow
 
     private suspend fun initSocketClient() {
-//        val url = Url("wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin")
         val url = Url("wss://ws.coincap.io/prices?assets=ALL")
         val client = HttpClient(CIO) { install(WebSockets) }
 
@@ -49,7 +48,10 @@ class CoinSocketImpl @Inject constructor(
                 when (frame) {
                     is Frame.Text -> {
                         val text = frame.readText()
-                        DataLog.i("Msg: $text")
+                        val coinMap = gson.fromJson(text, Map::class.java) as? Map<String, String>
+                        if (coinMap?.isNotEmpty() == true) {
+                            socketStateFlow.emit(coinMap ?: emptyMap())
+                        }
                     }
                     is Frame.Close -> {
                         val text = closeReason.await()?.message ?: "Def msg"
@@ -57,6 +59,7 @@ class CoinSocketImpl @Inject constructor(
                     }
                     else -> DataLog.i("Else branch")
                 }
+                delay(1000)
             }
         }
     }

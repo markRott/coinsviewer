@@ -1,10 +1,10 @@
 package com.rt.domain.repositories
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface CoinSocketContract {
 
     suspend fun connect()
 
-//    fun socketFlow() : Flow<String>
+    fun onSocketStateFlow(): StateFlow<Map<String, String>>
 }
