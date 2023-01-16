@@ -23,7 +23,7 @@ class CoinSocketImpl @Inject constructor(
     private val socketStateFlow = MutableStateFlow<Map<String, String>>(emptyMap())
 
     override suspend fun connect() {
-        DataLog.i("Connect to coin socket")
+        DataLog.i("Connect to coinCap socket")
         initSocketClient()
     }
 
@@ -49,9 +49,7 @@ class CoinSocketImpl @Inject constructor(
                     is Frame.Text -> {
                         val text = frame.readText()
                         val coinMap = gson.fromJson(text, Map::class.java) as? Map<String, String>
-                        if (coinMap?.isNotEmpty() == true) {
-                            socketStateFlow.emit(coinMap ?: emptyMap())
-                        }
+                        if (coinMap?.isNotEmpty() == true) socketStateFlow.emit(coinMap)
                     }
                     is Frame.Close -> {
                         val text = closeReason.await()?.message ?: "Def msg"
@@ -59,7 +57,7 @@ class CoinSocketImpl @Inject constructor(
                     }
                     else -> DataLog.i("Else branch")
                 }
-                delay(1000)
+                delay(100)
             }
         }
     }

@@ -26,9 +26,7 @@ import com.rt.domain.models.PriceFluctuation
 
 @Composable
 fun RenderCoins(homeVM: HomeVM) {
-
     val coinItems: List<Coin> by homeVM.updateCoinsFlow.collectAsState()
-
     if (coinItems.isNotEmpty()) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -48,7 +46,6 @@ fun PrepareCoinItemCard(coin: Coin) {
 
 @Composable
 fun CoinItem(coin: Coin) {
-
     val context = LocalContext.current
     val currFluctuation = coin.priceFluctuation
     val fluctuationColour: Color = when (coin.priceFluctuation) {
@@ -56,7 +53,6 @@ fun CoinItem(coin: Coin) {
         PriceFluctuation.DOWN -> Color.Red
         else -> Color.Black
     }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = CoinRowModifier(currFluctuation, fluctuationColour)
@@ -74,14 +70,14 @@ fun CoinRowModifier(
     currFluctuation: PriceFluctuation,
     fluctuationColour: Color
 ): Modifier {
-
-    val animatedBorderColour = animBorderColor(currFluctuation, fluctuationColour)
+//    val animatedBorderColour = animBorderColor(currFluctuation, fluctuationColour)
     return Modifier
         .fillMaxWidth()
         .border(
             width = 1.dp,
-            color = animatedBorderColour.value,
-            shape = remember(animatedBorderColour) { RoundedCornerShape(percent = 15) }
+            color = Color.Black,
+//            shape = remember(animatedBorderColour) { RoundedCornerShape(percent = 15) }
+            shape = RoundedCornerShape(percent = 15)
         )
         .padding(16.dp)
 }
@@ -103,17 +99,19 @@ fun CoinImage(url: String) {
 fun CoinName(name: String) {
     Text(
         text = name,
-        fontSize = 18.sp
+        fontSize = 16.sp,
+        color = Color.Black
     )
 }
 
 @Composable
 fun CoinPrice(price: String, currFluctuation: PriceFluctuation, fluctuationColour: Color) {
-    val animatedTextColour = animTextColor(currFluctuation, fluctuationColour)
+//    val animatedTextColour = animTextColor(currFluctuation, fluctuationColour)
     Text(
         text = price,
-        fontSize = 18.sp,
-        color = animatedTextColour.value
+        fontSize = 16.sp,
+//        color = animatedTextColour.value
+        color = Color.Black
     )
 }
 
@@ -147,4 +145,4 @@ private fun animTextColor(
     return animatedTextColour
 }
 
-private const val ANIM_DURATION = 500
+private const val ANIM_DURATION = 250

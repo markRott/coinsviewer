@@ -1,11 +1,10 @@
 package com.rt.data.models
 
+import com.rt.common.coinPriceFormat
 import com.rt.domain.models.Coin
 import com.rt.domain.models.Coins
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import okhttp3.internal.toImmutableList
-import kotlin.math.roundToInt
 
 @Serializable
 data class CoinsDto(
@@ -23,17 +22,15 @@ data class CoinDto(
 
 fun CoinsDto.toCoins(): Coins {
     val items = mutableListOf<Coin>()
-
     coinsDto
         .filterNotNull()
         .forEach { currCoin ->
-//            val price = (currCoin.price * 10000.0).roundToInt() / 10000.00
             items.add(
                 Coin(
                     id = currCoin.id,
                     name = currCoin.name,
                     icon = currCoin.icon,
-                    price = "%.2f".format(currCoin.price),
+                    price = currCoin.price.coinPriceFormat(2),
                     symbol = currCoin.symbol
                 )
             )

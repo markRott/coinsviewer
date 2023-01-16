@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rt.coinsviewer.Status
 import com.rt.coinsviewer.common.ProgressBar
-import com.rt.common.UiLog
 
 @Composable
 fun HomeScreen(homeVM: HomeVM = hiltViewModel()) {
@@ -18,7 +17,6 @@ fun CoinsView(homeVM: HomeVM) {
     when (uiState.value.status) {
         Status.LOADING -> ProgressBar(true)
         Status.SUCCESS -> {
-            UiLog.i("Rest state new data")
             RenderCoins(homeVM)
             ProgressBar(false)
         }
