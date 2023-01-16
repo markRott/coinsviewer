@@ -1,6 +1,7 @@
 # CoinsViewer
 
 **CoinViewer application**
+
 **Architecture: Clean Architecture + MVVM**
 
 **To develop this application I used the following technologies:**

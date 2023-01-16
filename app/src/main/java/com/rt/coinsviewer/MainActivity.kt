@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.rt.coinsviewer.home.HomeScreen
+import com.rt.coinsviewer.home.HomeScreenEntryPoint
 import com.rt.coinsviewer.navigation.Screens
 import com.rt.coinsviewer.splash.SplashScreen
 import com.rt.coinsviewer.ui.theme.CoinsViewerTheme
@@ -23,9 +23,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
-
             CoinsViewerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -46,7 +44,7 @@ class MainActivity : ComponentActivity() {
             startDestination = Screens.Splash.path
         ) {
             composable(Screens.Splash.path) { SplashScreen(navController) }
-            composable(Screens.Home.path) { HomeScreen() }
+            composable(Screens.Home.path) { HomeScreenEntryPoint(navController) }
         }
     }
 }

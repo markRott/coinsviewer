@@ -26,7 +26,7 @@ import com.rt.domain.models.PriceFluctuation
 
 @Composable
 fun RenderCoins(homeVM: HomeVM) {
-    val coinItems: List<Coin> by homeVM.updateCoinsFlow.collectAsState()
+    val coinItems by homeVM.updateCoinsFlow.collectAsState()
     if (coinItems.isNotEmpty()) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -40,12 +40,10 @@ fun RenderCoins(homeVM: HomeVM) {
 }
 
 @Composable
-fun PrepareCoinItemCard(coin: Coin) {
-    CoinItem(coin = coin)
-}
+private fun PrepareCoinItemCard(coin: Coin) { CoinItem(coin = coin) }
 
 @Composable
-fun CoinItem(coin: Coin) {
+private fun CoinItem(coin: Coin) {
     val context = LocalContext.current
     val currFluctuation = coin.priceFluctuation
     val fluctuationColour: Color = when (coin.priceFluctuation) {
@@ -66,7 +64,7 @@ fun CoinItem(coin: Coin) {
 }
 
 @Composable
-fun CoinRowModifier(
+private fun CoinRowModifier(
     currFluctuation: PriceFluctuation,
     fluctuationColour: Color
 ): Modifier {
@@ -83,7 +81,7 @@ fun CoinRowModifier(
 }
 
 @Composable
-fun CoinImage(url: String) {
+private fun CoinImage(url: String) {
     AsyncImage(
         model = url,
         contentDescription = null,
@@ -96,7 +94,7 @@ fun CoinImage(url: String) {
 }
 
 @Composable
-fun CoinName(name: String) {
+private fun CoinName(name: String) {
     Text(
         text = name,
         fontSize = 16.sp,
@@ -105,7 +103,7 @@ fun CoinName(name: String) {
 }
 
 @Composable
-fun CoinPrice(price: String, currFluctuation: PriceFluctuation, fluctuationColour: Color) {
+private fun CoinPrice(price: String, currFluctuation: PriceFluctuation, fluctuationColour: Color) {
 //    val animatedTextColour = animTextColor(currFluctuation, fluctuationColour)
     Text(
         text = price,
